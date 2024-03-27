@@ -28,13 +28,14 @@ const TableRenderer = ({
   handleSort,
 }: TableRendererProps) => {
   const renderTableHeader = () => (
-    <TableHead>
+    <TableHead className="">
       <TableRow>
         <TableCell>
           <TableSortLabel
             active={sortBy === "name"}
             direction={sortBy === "name" ? sortOrder : "asc"}
             onClick={() => handleSort("name")}
+            className="text-xl font-medium"
           >
             Name
           </TableSortLabel>
@@ -44,6 +45,7 @@ const TableRenderer = ({
             active={sortBy === "count"}
             direction={sortBy === "count" ? sortOrder : "asc"}
             onClick={() => handleSort("count")}
+            className="text-xl font-medium"
           >
             Count
           </TableSortLabel>

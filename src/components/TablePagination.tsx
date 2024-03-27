@@ -1,20 +1,12 @@
-import {
-  TablePagination as MuiTablePagination,
-  FormControl,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-} from "@mui/material";
+import React from "react";
+import { TablePagination as MuiTablePagination } from "@mui/material";
 
 type TablePaginationProps = {
   count: number;
   page: number;
   rowsPerPage: number;
-  onPageChange: (
-    event: React.MouseEvent<HTMLButtonElement> | null,
-    newPage: number
-  ) => void;
-  onRowsPerPageChange: (rowsPerPage: number) => void;
+  onPageChange: (newPage: number) => void;
+  onRowsPerPageChange: (newRowsPerPage: number) => void;
 };
 
 const TablePagination = ({
@@ -24,9 +16,14 @@ const TablePagination = ({
   onPageChange,
   onRowsPerPageChange,
 }: TablePaginationProps) => {
-  const handleRowsPerPageChange = (event: SelectChangeEvent<number>) => {
-    const newRowsPerPage = event.target.value as number;
-    onRowsPerPageChange(newRowsPerPage);
+  const handleChangePage = (_event: unknown, newPage: number) => {
+    onPageChange(newPage);
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    onRowsPerPageChange(parseInt(event.target.value, 10));
   };
 
   return (
@@ -35,18 +32,10 @@ const TablePagination = ({
       count={count}
       page={page}
       rowsPerPage={rowsPerPage}
-      onPageChange={onPageChange}
-      labelRowsPerPage={
-        <FormControl>
-          <Select value={rowsPerPage} onChange={handleRowsPerPageChange}>
-            {[5, 10, 15].map((option) => (
-              <MenuItem key={option} value={option}>
-                {option}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      }
+      rowsPerPageOptions={[5, 10, 15]}
+      onPageChange={handleChangePage}
+      onRowsPerPageChange={handleChangeRowsPerPage}
+      labelRowsPerPage="Rows:"
     />
   );
 };

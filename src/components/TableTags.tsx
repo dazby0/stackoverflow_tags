@@ -5,20 +5,8 @@ import useFetchTags from "../hooks/useFetchTags";
 import { sortTags } from "../utils/sortTags";
 import CircularProgress from "@mui/material/CircularProgress";
 import Alert from "@mui/material/Alert";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import Typography from "@mui/material/Typography";
-import styled from "@mui/material/styles/styled";
 
-const StyledCard = styled(Card)(({ theme }) => ({
-  maxWidth: 600,
-  margin: "auto",
-  marginTop: theme.spacing(2),
-  padding: theme.spacing(2),
-  textAlign: "center",
-}));
-
-const MainComponent = () => {
+const TableTags = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [sortBy, setSortBy] = useState<"name" | "count">("count");
@@ -37,10 +25,7 @@ const MainComponent = () => {
     setSortOrder((prevOrder) => (prevOrder === "asc" ? "desc" : "asc"));
   };
 
-  const handlePageChange = (
-    _event: React.MouseEvent<HTMLButtonElement> | null,
-    newPage: number
-  ) => {
+  const handlePageChange = (newPage: number) => {
     setPage(newPage);
   };
 
@@ -52,36 +37,36 @@ const MainComponent = () => {
   const sortedTags = tags ? sortTags(tags, sortBy, sortOrder) : [];
 
   return (
-    <StyledCard>
-      <CardContent>
-        {loading && <CircularProgress />}
-        {error && <Alert severity="error">Error with fetching data!</Alert>}
-        {tags && (
-          <>
-            <Typography variant="h5" gutterBottom>
-              Tags
-            </Typography>
-            <TableRenderer
-              tags={sortedTags.slice(
-                page * rowsPerPage,
-                (page + 1) * rowsPerPage
-              )}
-              sortBy={sortBy}
-              sortOrder={sortOrder}
-              handleSort={handleSort}
-            />
-            <TablePagination
-              count={sortedTags.length}
-              page={page}
-              rowsPerPage={rowsPerPage}
-              onPageChange={handlePageChange}
-              onRowsPerPageChange={handleRowsPerPageChange}
-            />
-          </>
-        )}
-      </CardContent>
-    </StyledCard>
+    <>
+      {loading && <CircularProgress />}
+      {error && <Alert severity="error">Error with fetching data!</Alert>}
+      <div className="relative overflow-x-auto shadow-md rounded-lg">
+        <div className="bg-primary">
+          {tags && (
+            <>
+              <h1 className="text-secondary text-4xl p-4 font-bold">Tags</h1>
+              <TableRenderer
+                tags={sortedTags.slice(
+                  page * rowsPerPage,
+                  (page + 1) * rowsPerPage
+                )}
+                sortBy={sortBy}
+                sortOrder={sortOrder}
+                handleSort={handleSort}
+              />
+              <TablePagination
+                count={sortedTags.length}
+                page={page}
+                rowsPerPage={rowsPerPage}
+                onPageChange={handlePageChange}
+                onRowsPerPageChange={handleRowsPerPageChange}
+              />
+            </>
+          )}
+        </div>
+      </div>
+    </>
   );
 };
 
-export default MainComponent;
+export default TableTags;
