@@ -1,12 +1,8 @@
-import React from "react";
 import { TablePagination as MuiTablePagination } from "@mui/material";
+import { RowsPageProps } from "../types";
 
-type TablePaginationProps = {
+type TablePaginationProps = RowsPageProps & {
   count: number;
-  page: number;
-  rowsPerPage: number;
-  onPageChange: (newPage: number) => void;
-  onRowsPerPageChange: (newRowsPerPage: number) => void;
 };
 
 const TablePagination = ({
@@ -25,8 +21,6 @@ const TablePagination = ({
   ) => {
     onRowsPerPageChange(parseInt(event.target.value, 10));
   };
-
-  // console.log(count);
 
   return (
     <MuiTablePagination

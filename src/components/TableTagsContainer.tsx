@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import TableTags from "./TableTags";
 import useFetchTags from "../hooks/useFetchTags";
 import { sortTags } from "../utils/sortTags";
 import { SortDirections, TableHeaders } from "../types";
 
-const TableTagsContainer: React.FC = () => {
+const TableTagsContainer = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [sortBy, setSortBy] = useState<TableHeaders.NAME | TableHeaders.COUNT>(
@@ -14,14 +14,14 @@ const TableTagsContainer: React.FC = () => {
     SortDirections.ASC | SortDirections.DESC
   >(SortDirections.DESC);
 
+  const apiKey = import.meta.env.VITE_API_KEY;
+
   const {
     data: tags,
     isLoading,
     isError,
     error,
-  } = useFetchTags("stackoverflow", "1G3sBZts4dDIrM1j)Cx1wQ((");
-
-  // console.log(tags);
+  } = useFetchTags("stackoverflow", apiKey);
 
   useEffect(() => {
     setPage(0);
@@ -51,8 +51,6 @@ const TableTagsContainer: React.FC = () => {
     setRowsPerPage(rowsPerPage);
     setPage(0);
   };
-
-  console.log(displayedTags);
 
   return (
     <TableTags

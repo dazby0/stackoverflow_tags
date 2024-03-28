@@ -1,10 +1,6 @@
 import { TableBody as MuiTableBody } from "@mui/material";
 import TableRow from "./TableRow";
-
-type Tag = {
-  name: string;
-  count: number;
-};
+import { Tag } from "../types";
 
 type TableBodyProps = {
   tags: Tag[];

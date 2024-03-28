@@ -1,18 +1,10 @@
 import { Table, TableContainer, Paper } from "@mui/material";
 import { TableHeader } from "./TableHeader";
 import TableBody from "./TableBody";
-import { SortDirections, TableHeaders } from "../types";
+import { Tag, SortsTypeProps } from "../types";
 
-type Tag = {
-  name: string;
-  count: number;
-};
-
-type TableRendererProps = {
+type TableRendererProps = SortsTypeProps & {
   tags: Tag[];
-  sortBy: TableHeaders.NAME | TableHeaders.COUNT;
-  sortOrder: SortDirections.ASC | SortDirections.DESC;
-  handleSort: (property: TableHeaders.NAME | TableHeaders.COUNT) => void;
 };
 
 const TableRenderer = ({
@@ -21,7 +13,6 @@ const TableRenderer = ({
   sortOrder,
   handleSort,
 }: TableRendererProps) => {
-  console.log(tags);
   return (
     <TableContainer component={Paper}>
       <Table>

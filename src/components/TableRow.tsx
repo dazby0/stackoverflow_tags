@@ -1,9 +1,5 @@
 import { TableRow as MuiTableRow, TableCell } from "@mui/material";
-
-type Tag = {
-  name: string;
-  count: number;
-};
+import { Tag } from "../types";
 
 type TableRowProps = {
   tag: Tag;

@@ -1,17 +1,11 @@
 import { TableCell, TableHead, TableRow, TableSortLabel } from "@mui/material";
-import { SortDirections, TableHeaders } from "../types";
-
-type TableHeaderProps = {
-  sortBy: TableHeaders.NAME | TableHeaders.COUNT;
-  sortOrder: SortDirections.ASC | SortDirections.DESC;
-  handleSort: (property: TableHeaders.NAME | TableHeaders.COUNT) => void;
-};
+import { SortDirections, TableHeaders, SortsTypeProps } from "../types";
 
 export const TableHeader = ({
   sortBy,
   sortOrder,
   handleSort,
-}: TableHeaderProps) => {
+}: SortsTypeProps) => {
   return (
     <TableHead>
       <TableRow>

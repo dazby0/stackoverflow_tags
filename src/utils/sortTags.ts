@@ -1,9 +1,5 @@
 import { SortDirections, TableHeaders } from "../types";
-
-type Tag = {
-  name: string;
-  count: number;
-};
+import { Tag } from "../types";
 
 export const sortTags = (
   tags: Tag[],

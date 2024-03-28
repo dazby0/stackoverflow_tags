@@ -1,29 +1,34 @@
 import { useQuery } from "react-query";
-
-type Tag = {
-  name: string;
-  count: number;
-};
+import { Tag } from "../types";
 
 type ApiError = {
   message: string;
 };
 
-const fetchTags = async (site: string, apiKey: string) => {
+interface TagResponse {
+  items: {
+    name: string;
+    count: number;
+  }[];
+}
+
+const fetchTags = async (site: string, apiKey: string): Promise<Tag[]> => {
   const params = new URLSearchParams();
   params.append("site", site);
   params.append("key", apiKey);
-  const url = `https://api.stackexchange.com/2.3/tags?${params.toString()}`;
+  const queryParams = params.toString(); // Get the query parameters as a string
+
+  const url = `https://api.stackexchange.com/2.3/tags?${queryParams}`;
 
   const response = await fetch(url);
   if (!response.ok) {
     throw new Error("Failed to fetch tags");
   }
-  const data = await response.json();
-  return data.items.map((tag: any) => ({
+  const data: TagResponse = await response.json();
+  return data.items.map((tag) => ({
     name: tag.name,
     count: tag.count,
-  })) as Tag[];
+  }));
 };
 
 const useFetchTags = (site: string, apiKey: string) => {

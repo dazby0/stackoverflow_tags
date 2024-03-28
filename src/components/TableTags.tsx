@@ -1,29 +1,17 @@
-import React from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 import Alert from "@mui/material/Alert";
 import TableRenderer from "./TableRenderer";
 import TablePagination from "./TablePagination";
-import { SortDirections, TableHeaders } from "../types";
+import { Tag, SortsTypeProps, RowsPageProps } from "../types";
 
-type Tag = {
-  name: string;
-  count: number;
-};
-
-type TableTagsProps = {
-  isLoading: boolean;
-  isError: boolean;
-  errorMessage?: string | null;
-  displayedTags: Tag[];
-  tagsCount: number;
-  sortBy: TableHeaders.NAME | TableHeaders.COUNT;
-  sortOrder: SortDirections.ASC | SortDirections.DESC;
-  handleSort: (property: TableHeaders.NAME | TableHeaders.COUNT) => void;
-  page: number;
-  rowsPerPage: number;
-  onPageChange: (newPage: number) => void;
-  onRowsPerPageChange: (rowsPerPage: number) => void;
-};
+type TableTagsProps = SortsTypeProps &
+  RowsPageProps & {
+    isLoading: boolean;
+    isError: boolean;
+    errorMessage?: string | null;
+    displayedTags: Tag[];
+    tagsCount: number;
+  };
 
 const TableTags: React.FC<TableTagsProps> = ({
   isLoading,
@@ -40,34 +28,36 @@ const TableTags: React.FC<TableTagsProps> = ({
   tagsCount,
 }) => {
   return (
-    <>
-      {isLoading && <CircularProgress />}
-      {isError && errorMessage && (
+    <div>
+      {isLoading ? (
+        <CircularProgress />
+      ) : isError ? (
         <Alert severity="error">Error: {errorMessage}</Alert>
-      )}
-      <div className="relative overflow-x-auto shadow-md rounded-lg">
-        <div className="bg-primary">
-          {displayedTags && (
-            <>
-              <h1 className="text-secondary text-4xl p-4 font-bold">Tags</h1>
-              <TableRenderer
-                tags={displayedTags}
-                sortBy={sortBy}
-                sortOrder={sortOrder}
-                handleSort={handleSort}
-              />
-              <TablePagination
-                count={tagsCount}
-                page={page}
-                rowsPerPage={rowsPerPage}
-                onPageChange={onPageChange}
-                onRowsPerPageChange={onRowsPerPageChange}
-              />
-            </>
-          )}
+      ) : (
+        <div className="relative overflow-x-auto shadow-md rounded-lg">
+          <div className="bg-primary">
+            {displayedTags && (
+              <div>
+                <h1 className="text-secondary text-4xl p-4 font-bold">Tags</h1>
+                <TableRenderer
+                  tags={displayedTags}
+                  sortBy={sortBy}
+                  sortOrder={sortOrder}
+                  handleSort={handleSort}
+                />
+                <TablePagination
+                  count={tagsCount}
+                  page={page}
+                  rowsPerPage={rowsPerPage}
+                  onPageChange={onPageChange}
+                  onRowsPerPageChange={onRowsPerPageChange}
+                />
+              </div>
+            )}
+          </div>
         </div>
-      </div>
-    </>
+      )}
+    </div>
   );
 };
 
