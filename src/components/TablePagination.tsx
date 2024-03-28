@@ -26,6 +26,8 @@ const TablePagination = ({
     onRowsPerPageChange(parseInt(event.target.value, 10));
   };
 
+  // console.log(count);
+
   return (
     <MuiTablePagination
       component="div"

@@ -1,65 +1,67 @@
-import React, { useState, useEffect } from "react";
-import TableRenderer from "./TableRenderer";
-import TablePagination from "./TablePagination";
-import useFetchTags from "../hooks/useFetchTags";
-import { sortTags } from "../utils/sortTags";
+import React from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 import Alert from "@mui/material/Alert";
+import TableRenderer from "./TableRenderer";
+import TablePagination from "./TablePagination";
+import { SortDirections, TableHeaders } from "../types";
 
-const TableTags = () => {
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [sortBy, setSortBy] = useState<"name" | "count">("count");
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
-  const { loading, error, tags } = useFetchTags(
-    "stackoverflow",
-    "1G3sBZts4dDIrM1j)Cx1wQ(("
-  );
+type Tag = {
+  name: string;
+  count: number;
+};
 
-  useEffect(() => {
-    setPage(0); // Reset page when tags change
-  }, [tags]);
+type TableTagsProps = {
+  isLoading: boolean;
+  isError: boolean;
+  errorMessage?: string | null;
+  displayedTags: Tag[];
+  tagsCount: number;
+  sortBy: TableHeaders.NAME | TableHeaders.COUNT;
+  sortOrder: SortDirections.ASC | SortDirections.DESC;
+  handleSort: (property: TableHeaders.NAME | TableHeaders.COUNT) => void;
+  page: number;
+  rowsPerPage: number;
+  onPageChange: (newPage: number) => void;
+  onRowsPerPageChange: (rowsPerPage: number) => void;
+};
 
-  const handleSort = (property: "name" | "count") => {
-    setSortBy(property);
-    setSortOrder((prevOrder) => (prevOrder === "asc" ? "desc" : "asc"));
-  };
-
-  const handlePageChange = (newPage: number) => {
-    setPage(newPage);
-  };
-
-  const handleRowsPerPageChange = (rowsPerPage: number) => {
-    setRowsPerPage(rowsPerPage);
-    setPage(0); // Reset page when rows per page changes
-  };
-
-  const sortedTags = tags ? sortTags(tags, sortBy, sortOrder) : [];
-
+const TableTags: React.FC<TableTagsProps> = ({
+  isLoading,
+  isError,
+  errorMessage,
+  displayedTags,
+  sortBy,
+  sortOrder,
+  handleSort,
+  page,
+  rowsPerPage,
+  onPageChange,
+  onRowsPerPageChange,
+  tagsCount,
+}) => {
   return (
     <>
-      {loading && <CircularProgress />}
-      {error && <Alert severity="error">Error with fetching data!</Alert>}
+      {isLoading && <CircularProgress />}
+      {isError && errorMessage && (
+        <Alert severity="error">Error: {errorMessage}</Alert>
+      )}
       <div className="relative overflow-x-auto shadow-md rounded-lg">
         <div className="bg-primary">
-          {tags && (
+          {displayedTags && (
             <>
               <h1 className="text-secondary text-4xl p-4 font-bold">Tags</h1>
               <TableRenderer
-                tags={sortedTags.slice(
-                  page * rowsPerPage,
-                  (page + 1) * rowsPerPage
-                )}
+                tags={displayedTags}
                 sortBy={sortBy}
                 sortOrder={sortOrder}
                 handleSort={handleSort}
               />
               <TablePagination
-                count={sortedTags.length}
+                count={tagsCount}
                 page={page}
                 rowsPerPage={rowsPerPage}
-                onPageChange={handlePageChange}
-                onRowsPerPageChange={handleRowsPerPageChange}
+                onPageChange={onPageChange}
+                onRowsPerPageChange={onRowsPerPageChange}
               />
             </>
           )}

@@ -1,8 +1,13 @@
+import { QueryClient, QueryClientProvider } from "react-query";
 import "./App.css";
-import TableTags from "./components/TableTags";
+import TableTagsContainer from "./components/TableTagsContainer";
 
 function App() {
-  return <TableTags />;
+  return (
+    <QueryClientProvider client={new QueryClient()}>
+      <TableTagsContainer />
+    </QueryClientProvider>
+  );
 }
 
 export default App;

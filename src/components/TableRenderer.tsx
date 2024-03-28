@@ -1,13 +1,7 @@
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  TableSortLabel,
-} from "@mui/material";
+import { Table, TableContainer, Paper } from "@mui/material";
+import { TableHeader } from "./TableHeader";
+import TableBody from "./TableBody";
+import { SortDirections, TableHeaders } from "../types";
 
 type Tag = {
   name: string;
@@ -16,9 +10,9 @@ type Tag = {
 
 type TableRendererProps = {
   tags: Tag[];
-  sortBy: "name" | "count";
-  sortOrder: "asc" | "desc";
-  handleSort: (property: "name" | "count") => void;
+  sortBy: TableHeaders.NAME | TableHeaders.COUNT;
+  sortOrder: SortDirections.ASC | SortDirections.DESC;
+  handleSort: (property: TableHeaders.NAME | TableHeaders.COUNT) => void;
 };
 
 const TableRenderer = ({
@@ -27,49 +21,16 @@ const TableRenderer = ({
   sortOrder,
   handleSort,
 }: TableRendererProps) => {
-  const renderTableHeader = () => (
-    <TableHead className="">
-      <TableRow>
-        <TableCell>
-          <TableSortLabel
-            active={sortBy === "name"}
-            direction={sortBy === "name" ? sortOrder : "asc"}
-            onClick={() => handleSort("name")}
-            className="text-xl font-medium"
-          >
-            Name
-          </TableSortLabel>
-        </TableCell>
-        <TableCell>
-          <TableSortLabel
-            active={sortBy === "count"}
-            direction={sortBy === "count" ? sortOrder : "asc"}
-            onClick={() => handleSort("count")}
-            className="text-xl font-medium"
-          >
-            Count
-          </TableSortLabel>
-        </TableCell>
-      </TableRow>
-    </TableHead>
-  );
-
-  const renderTableBody = () => (
-    <TableBody>
-      {tags.map((tag) => (
-        <TableRow key={tag.name}>
-          <TableCell>{tag.name}</TableCell>
-          <TableCell>{tag.count}</TableCell>
-        </TableRow>
-      ))}
-    </TableBody>
-  );
-
+  console.log(tags);
   return (
     <TableContainer component={Paper}>
       <Table>
-        {renderTableHeader()}
-        {renderTableBody()}
+        <TableHeader
+          sortBy={sortBy}
+          sortOrder={sortOrder}
+          handleSort={handleSort}
+        />
+        <TableBody tags={tags} />
       </Table>
     </TableContainer>
   );

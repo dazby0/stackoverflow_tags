@@ -1,48 +1,35 @@
-import { useState, useEffect } from "react";
+import { useQuery } from "react-query";
 
 type Tag = {
   name: string;
   count: number;
 };
 
-type HookState = {
-  loading: boolean;
-  error: string | null;
-  tags: Tag[] | null;
+type ApiError = {
+  message: string;
 };
 
-const useFetchTags = (site: string, apiKey: string): HookState => {
-  const [hookState, setHookState] = useState<HookState>({
-    loading: true,
-    error: null,
-    tags: null,
-  });
+const fetchTags = async (site: string, apiKey: string) => {
+  const params = new URLSearchParams();
+  params.append("site", site);
+  params.append("key", apiKey);
+  const url = `https://api.stackexchange.com/2.3/tags?${params.toString()}`;
 
-  useEffect(() => {
-    const fetchTags = async () => {
-      try {
-        const res = await fetch(
-          `https://api.stackexchange.com/2.3/tags?site=${site}&key=${apiKey}`
-        );
-        const data = await res.json();
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error("Failed to fetch tags");
+  }
+  const data = await response.json();
+  return data.items.map((tag: any) => ({
+    name: tag.name,
+    count: tag.count,
+  })) as Tag[];
+};
 
-        if (res.ok) {
-          const tagsData = data.items.map((tag: any) => ({
-            name: tag.name,
-            count: tag.count,
-          }));
-          setHookState({ loading: false, error: null, tags: tagsData });
-        } else {
-          throw new Error(data.error.message || "Failed to fetch tags");
-        }
-      } catch (error) {
-        setHookState({ loading: false, error: "Unknown error!", tags: null });
-      }
-    };
-    fetchTags();
-  }, [site, apiKey]);
-
-  return hookState;
+const useFetchTags = (site: string, apiKey: string) => {
+  return useQuery<Tag[], ApiError>(["tags", site, apiKey], () =>
+    fetchTags(site, apiKey)
+  );
 };
 
 export default useFetchTags;
